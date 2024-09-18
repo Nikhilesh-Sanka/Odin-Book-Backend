@@ -450,6 +450,7 @@ const getUserPosts = async (userId) => {
       id: true,
       author: {
         select: {
+          id: true,
           username: true,
           profile: {
             select: {
