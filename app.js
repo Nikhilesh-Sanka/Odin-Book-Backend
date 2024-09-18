@@ -8,7 +8,7 @@ require("dotenv").config();
 // applying the necessary middlewares to the requests
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["https://main--odin-book-nikhilesh-sanka.netlify.app/"],
   })
 );
 app.use(express.json());
