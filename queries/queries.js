@@ -159,7 +159,7 @@ const getUsers = async (userId, searchQuery) => {
   return result;
 };
 
-const getUserProfile = async (userId) => {
+const getUserProfile = async (userId, clientId) => {
   const profile = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -194,7 +194,7 @@ const getUserProfile = async (userId) => {
                   author: {
                     followers: {
                       some: {
-                        id: userId,
+                        id: clientId,
                       },
                     },
                   },
@@ -203,7 +203,7 @@ const getUserProfile = async (userId) => {
                   author: {
                     following: {
                       some: {
-                        id: userId,
+                        id: clientId,
                       },
                     },
                   },
@@ -211,11 +211,6 @@ const getUserProfile = async (userId) => {
               ],
             },
           ],
-        },
-        {
-          author: {
-            id: userId,
-          },
         },
       ],
     },
@@ -228,7 +223,7 @@ const getUserProfile = async (userId) => {
           profile: true,
           followers: {
             where: {
-              id: userId,
+              id: clientId,
             },
             select: {
               id: true,
@@ -236,7 +231,7 @@ const getUserProfile = async (userId) => {
           },
           following: {
             where: {
-              id: userId,
+              id: clientId,
             },
             select: {
               id: true,
@@ -248,7 +243,7 @@ const getUserProfile = async (userId) => {
       content: true,
       likedBy: {
         where: {
-          id: userId,
+          id: clientId,
         },
       },
       image: true,

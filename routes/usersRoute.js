@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
 router.get("/profile", async (req, res, next) => {
   try {
     const userId = req.query["userId"];
-    const profile = await queries.getUserProfile(userId);
+    const profile = await queries.getUserProfile(userId, req.userId);
     if (profile) {
       res.status(200).send(profile);
     } else {
