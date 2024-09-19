@@ -159,7 +159,7 @@ const getUsers = async (userId, searchQuery) => {
   return result;
 };
 
-const getUserProfile = async (userId, generalUserId) => {
+const getUserProfile = async (userId) => {
   const profile = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -178,7 +178,7 @@ const getUserProfile = async (userId, generalUserId) => {
   });
   const posts = await prisma.post.findMany({
     where: {
-      authorId: generalUserId,
+      authorId: userId,
       OR: [
         {
           visibleTo: "all",
