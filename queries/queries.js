@@ -159,8 +159,8 @@ const getUsers = async (userId, searchQuery) => {
   return result;
 };
 
-const getUserProfile = async (userId) => {
-  const result = await prisma.user.findUnique({
+const getUserProfile = async (userId, generalUserId) => {
+  const profile = await prisma.user.findUnique({
     where: {
       id: userId,
     },
@@ -176,7 +176,91 @@ const getUserProfile = async (userId) => {
       },
     },
   });
-  return result;
+  const posts = await prisma.post.findMany({
+    where: {
+      authorId: generalUserId,
+      OR: [
+        {
+          visibleTo: "all",
+        },
+        {
+          AND: [
+            {
+              visibleTo: "followers-following",
+            },
+            {
+              OR: [
+                {
+                  author: {
+                    followers: {
+                      some: {
+                        id: userId,
+                      },
+                    },
+                  },
+                },
+                {
+                  author: {
+                    following: {
+                      some: {
+                        id: userId,
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          author: {
+            id: userId,
+          },
+        },
+      ],
+    },
+    select: {
+      id: true,
+      author: {
+        select: {
+          id: true,
+          username: true,
+          profile: true,
+          followers: {
+            where: {
+              id: userId,
+            },
+            select: {
+              id: true,
+            },
+          },
+          following: {
+            where: {
+              id: userId,
+            },
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
+      createdAt: true,
+      content: true,
+      likedBy: {
+        where: {
+          id: userId,
+        },
+      },
+      image: true,
+      likes: true,
+      createdAt: true,
+      visibleTo: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return { profile, posts };
 };
 
 // requests related queries
