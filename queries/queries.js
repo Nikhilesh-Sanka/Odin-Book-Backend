@@ -255,7 +255,7 @@ const getUserProfile = async (userId, clientId) => {
       createdAt: "desc",
     },
   });
-  return { profile, posts };
+  return { profile, posts, clientId };
 };
 
 // requests related queries
